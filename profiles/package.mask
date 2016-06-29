@@ -1,0 +1,4 @@
+# gnome-shell wont build GIR and bails
+=x11-wm/mutter-3.21*
+=gnome-base/gnome-shell-3.21*
+=gnome-extra/gnome-shell-extensions-3.21*
