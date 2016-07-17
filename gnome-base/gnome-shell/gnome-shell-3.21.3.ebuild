@@ -126,7 +126,10 @@ src_prepare() {
 	eapply "${FILESDIR}"/${PN}-3.12-bluetooth-flag.patch
 
 	# Fix automagic gnome-bluetooth dep, bug #398145
-	eapply "${FILESDIR}"/${P}-gir_clutter.patch
+#	eapply "${FILESDIR}"/${P}-gir_clutter.patch
+
+	# build fix
+	eapply "${FILESDIR}"/${P}-build_fix.patch
 
 	eautoreconf
 	gnome2_src_prepare
