@@ -22,7 +22,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="LGPL-2+"
 SLOT="2"
-IUSE="dbus debug fam kernel_linux +mime selinux static-libs systemtap test utils xattr"
+IUSE="dbus debug fam kernel_linux +mime selinux static-libs systemd systemtap test utils xattr"
 REQUIRED_USE="
 	utils? ( ${PYTHON_REQUIRED_USE} )
 	test? ( ${PYTHON_REQUIRED_USE} )
@@ -44,6 +44,7 @@ RDEPEND="
 		>=dev-util/gdbus-codegen-${PV}[${PYTHON_USEDEP}]
 		virtual/libelf:0=
 	)
+	systemd? ( sys-apps/systemd )
 "
 DEPEND="${RDEPEND}
 	app-text/docbook-xml-dtd:4.1.2
@@ -113,7 +114,7 @@ src_prepare() {
 	fi
 
 	# gdbus-codegen is a separate package
-	eapply "${FILESDIR}"/${PN}-2.40.0-external-gdbus-codegen.patch
+	eapply "${FILESDIR}"/${PN}-2.49.3-external-gdbus-codegen.patch
 
 	# Leave python shebang alone - handled by python_replicate_script
 	# We could call python_setup and give configure a valid --with-python
@@ -169,6 +170,7 @@ multilib_src_configure() {
 		$(use_enable fam) \
 		$(use_enable selinux) \
 		$(use_enable static-libs static) \
+		$(use_enable systemd libsystemd) \
 		$(use_enable systemtap dtrace) \
 		$(use_enable systemtap systemtap) \
 		$(multilib_native_use_enable utils libelf) \
