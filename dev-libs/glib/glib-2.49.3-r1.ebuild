@@ -116,6 +116,9 @@ src_prepare() {
 	# gdbus-codegen is a separate package
 	eapply "${FILESDIR}"/${PN}-2.49.3-external-gdbus-codegen.patch
 
+	# FIXME: revert new logging for now (https://bugzilla.gnome.org/show_bug.cgi?id=744456)
+	eapply "${FILESDIR}"/${PN}-2.49.3-log_revert.patch
+
 	# Leave python shebang alone - handled by python_replicate_script
 	# We could call python_setup and give configure a valid --with-python
 	# arg, but that would mean a build dep on python when USE=utils.
