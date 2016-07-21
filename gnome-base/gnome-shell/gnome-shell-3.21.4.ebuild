@@ -129,7 +129,7 @@ src_prepare() {
 #	eapply "${FILESDIR}"/${P}-gir_clutter.patch
 
 	# build fix
-	eapply "${FILESDIR}"/${P}-build_fix.patch
+	eapply "${FILESDIR}"/${PN}-3.21.3-build_fix.patch
 
 	eautoreconf
 	gnome2_src_prepare
