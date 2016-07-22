@@ -116,6 +116,9 @@ src_prepare() {
 	# gdbus-codegen is a separate package
 	eapply "${FILESDIR}"/${PN}-2.49.3-external-gdbus-codegen.patch
 
+	# fix null issue in new logging system
+	eapply "${FILESDIR}"/${PN}-2.49.4-null_log_domain.patch
+
 	# Leave python shebang alone - handled by python_replicate_script
 	# We could call python_setup and give configure a valid --with-python
 	# arg, but that would mean a build dep on python when USE=utils.
