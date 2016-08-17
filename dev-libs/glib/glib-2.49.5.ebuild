@@ -22,7 +22,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="LGPL-2+"
 SLOT="2"
-IUSE="dbus debug fam kernel_linux +mime selinux static-libs systemd systemtap test utils xattr"
+IUSE="dbus debug fam kernel_linux +libmount +mime selinux static-libs systemtap test utils xattr"
 REQUIRED_USE="
 	utils? ( ${PYTHON_REQUIRED_USE} )
 	test? ( ${PYTHON_REQUIRED_USE} )
@@ -44,7 +44,7 @@ RDEPEND="
 		>=dev-util/gdbus-codegen-${PV}[${PYTHON_USEDEP}]
 		virtual/libelf:0=
 	)
-	systemd? ( sys-apps/systemd )
+	libmount? ( >=sys-apps/util-linux-2.28 )
 "
 DEPEND="${RDEPEND}
 	app-text/docbook-xml-dtd:4.1.2
@@ -116,9 +116,6 @@ src_prepare() {
 	# gdbus-codegen is a separate package
 	eapply "${FILESDIR}"/${PN}-2.49.3-external-gdbus-codegen.patch
 
-	# fix null issue in new logging system
-	eapply "${FILESDIR}"/${PN}-2.49.4-null_log_domain.patch
-
 	# Leave python shebang alone - handled by python_replicate_script
 	# We could call python_setup and give configure a valid --with-python
 	# arg, but that would mean a build dep on python when USE=utils.
@@ -171,9 +168,9 @@ multilib_src_configure() {
 		$(usex debug --enable-debug=yes ' ') \
 		$(use_enable xattr) \
 		$(use_enable fam) \
+		$(use_enable libmount) \
 		$(use_enable selinux) \
 		$(use_enable static-libs static) \
-		$(use_enable systemd libsystemd) \
 		$(use_enable systemtap dtrace) \
 		$(use_enable systemtap systemtap) \
 		$(multilib_native_use_enable utils libelf) \
