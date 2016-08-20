@@ -32,8 +32,7 @@ RDEPEND="${COMMON_DEPEND}
 	x11-themes/adwaita-icon-theme
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-util/intltool-0.50
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.6
 	virtual/pkgconfig
 "
 # eautoreconf needs gnome-base/gnome-common

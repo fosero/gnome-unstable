@@ -10,7 +10,7 @@ HOMEPAGE="https://git.gnome.org/browse/mutter/"
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="+introspection +kms test wayland"
+IUSE="+introspection +gudev +kms libwacom test wayland"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
 # libXi-1.7.4 or newer needed per:
@@ -23,10 +23,11 @@ COMMON_DEPEND="
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
 	>=x11-libs/libXcomposite-0.2
-	>=gnome-base/gsettings-desktop-schemas-3.19.3[introspection?]
+	>=gnome-base/gsettings-desktop-schemas-3.21.4[introspection?]
 	dev-libs/json-glib
 	gnome-base/gnome-desktop:3=
 	>sys-power/upower-0.99:=
+	>=sys-kernel/linux-headers-4.5
 
 	x11-libs/libICE
 	x11-libs/libSM
@@ -47,22 +48,23 @@ COMMON_DEPEND="
 
 	gnome-extra/zenity
 
+	gudev? ( virtual/libgudev )
 	introspection? ( >=dev-libs/gobject-introspection-1.42:= )
 	kms? (
-		dev-libs/libinput
+		>=dev-libs/libinput-1.4
 		media-libs/cogl:1.0=[kms]
 		>=media-libs/mesa-10.3[gbm]
 		sys-apps/systemd
 		virtual/libgudev
 		x11-libs/libdrm:= )
+	libwacom? ( >=dev-libs/libwacom-0.13 )
 	wayland? (
 		>=dev-libs/wayland-1.6.90
-		>=dev-libs/wayland-protocols-1.1
+		>=dev-libs/wayland-protocols-1.5
 		x11-base/xorg-server[wayland] )
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-util/intltool-0.41
-	sys-devel/gettext
+	>=sys-devel/gettext-0.19.6
 	virtual/pkgconfig
 	x11-proto/xextproto
 	x11-proto/xineramaproto
@@ -81,6 +83,8 @@ src_configure() {
 		--enable-verbose-mode \
 		--with-libcanberra \
 		$(use_enable introspection) \
+		$(use_with gudev) \
 		$(use_enable kms native-backend) \
+		$(use_enable libwacom) \
 		$(use_enable wayland)
 }

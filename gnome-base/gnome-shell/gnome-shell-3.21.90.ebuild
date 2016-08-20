@@ -27,7 +27,7 @@ COMMON_DEPEND="
 	>=app-crypt/gcr-3.7.5[introspection]
 	>=dev-libs/glib-2.45.3:2[dbus]
 	>=dev-libs/gjs-1.39
-	>=dev-libs/gobject-introspection-1.45.4:=
+	>=dev-libs/gobject-introspection-1.49.1:=
 	dev-libs/libical:=
 	>=x11-libs/gtk+-3.15.0:3[introspection]
 	>=dev-libs/json-glib-0.13.2
@@ -110,7 +110,7 @@ PDEPEND="
 DEPEND="${COMMON_DEPEND}
 	dev-libs/libxslt
 	>=dev-util/gtk-doc-am-1.17
-	>=dev-util/intltool-0.40
+	>=sys-devel/gettext-0.19.6
 	gnome-base/gnome-common
 	virtual/pkgconfig
 	!!=dev-lang/spidermonkey-1.8.2*
@@ -119,14 +119,8 @@ DEPEND="${COMMON_DEPEND}
 # https://bugs.gentoo.org/show_bug.cgi?id=360413
 
 src_prepare() {
-	# Change favorites defaults, bug #479918
-	eapply "${FILESDIR}"/${PN}-3.14.0-defaults.patch
-
 	# Fix automagic gnome-bluetooth dep, bug #398145
 	eapply "${FILESDIR}"/${PN}-3.12-bluetooth-flag.patch
-
-	# Fix automagic gnome-bluetooth dep, bug #398145
-#	eapply "${FILESDIR}"/${P}-gir_clutter.patch
 
 	# build fix
 	eapply "${FILESDIR}"/${PN}-3.21.3-build_fix.patch
