@@ -29,6 +29,8 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86"
 # nspr used by smartcard extension
 # dconf, dbus and g-s-d are needed at install time for dconf update
 # We need either systemd or >=openrc-0.12 to restart gdm properly, bug #463784
+
+# NOTE: sys-apps/keyutils for login needed, not a proper switch however
 COMMON_DEPEND="
 	app-text/iso-codes
 	>=dev-libs/glib-2.36:2[dbus]
