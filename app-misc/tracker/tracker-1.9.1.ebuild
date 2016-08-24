@@ -15,7 +15,7 @@ LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/100"
 IUSE="cue elibc_glibc exif ffmpeg firefox-bookmarks flac gif gsf
 gstreamer gtk iptc +iso +jpeg libav +miner-fs mp3 nautilus networkmanager
-pdf playlist rss stemmer test thunderbird +tiff upnp-av upower +vorbis +xml xmp xps"
+pdf playlist png rss stemmer test thunderbird +tiff upnp-av upower +vorbis +xml xmp xps"
 
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
@@ -31,13 +31,13 @@ REQUIRED_USE="
 RDEPEND="
 	>=app-i18n/enca-1.9
 	>=dev-db/sqlite-3.7.15:=
-	>=dev-libs/glib-2.40:2
+	>=dev-libs/glib-2.44:2
 	>=dev-libs/gobject-introspection-0.9.5:=
 	>=dev-libs/icu-4.8.1.1:=
 	|| (
 		>=media-gfx/imagemagick-5.2.1[png,jpeg?]
 		media-gfx/graphicsmagick[imagemagick,png,jpeg?] )
-	>=media-libs/libpng-1.2:0=
+	png? ( >=media-libs/libpng-1.2:0= )
 	>=media-libs/libmediaart-1.9:2.0
 	sys-apps/util-linux
 
@@ -172,7 +172,6 @@ src_configure() {
 		--enable-icon \
 		--enable-introspection \
 		--enable-libmediaart \
-		--enable-libpng \
 		--enable-miner-apps \
 		--enable-miner-user-guides \
 		--enable-ps \
@@ -201,6 +200,7 @@ src_configure() {
 		$(use_enable networkmanager network-manager) \
 		$(use_enable pdf poppler) \
 		$(use_enable playlist) \
+		$(use_enable png libpng) \
 		$(use_enable rss miner-rss) \
 		$(use_enable stemmer libstemmer) \
 		$(use_enable test functional-tests) \
