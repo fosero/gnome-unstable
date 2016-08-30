@@ -60,7 +60,7 @@ COMMON_DEPEND="
 	libwacom? ( >=dev-libs/libwacom-0.13 )
 	wayland? (
 		>=dev-libs/wayland-1.6.90
-		>=dev-libs/wayland-protocols-1.5
+		>=dev-libs/wayland-protocols-1.7
 		x11-base/xorg-server[wayland] )
 "
 DEPEND="${COMMON_DEPEND}
