@@ -18,11 +18,17 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.43.4:2
 	>=dev-libs/gobject-introspection-0.9.6
 	net-libs/telepathy-glib[introspection]
-	>=x11-libs/gtk+-3.19.12:3[introspection]
+	>=x11-libs/gtk+-3.21.5:3[introspection]
 "
 RDEPEND="${COMMON_DEPEND}
 	>=net-irc/telepathy-idle-0.2
 	net-im/telepathy-logger[introspection]
+	net-libs/libsoup:2.4
+	x11-libs/gdk-pixbuf
+	x11-libs/pango
+	app-crypt/libsecret
+	net-im/telepathy-logger
+	net-libs/telepathy-glib
 "
 DEPEND="${COMMON_DEPEND}
 	dev-libs/appstream-glib
