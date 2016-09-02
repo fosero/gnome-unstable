@@ -32,7 +32,7 @@ RDEPEND="
 	>=dev-libs/libxml2-2.9
 	dev-util/uncrustify
 	sys-devel/clang
-	>=x11-libs/gtk+-3.21.1:3[introspection?]
+	>x11-libs/gtk+-3.21.5:3[introspection?]
 	>=x11-libs/gtksourceview-3.21.2:3.0[introspection?]
 	cpp? ( >=dev-cpp/glibmm-2.49.1
 		>=dev-cpp/gtkmm-3.19.12 )
@@ -40,12 +40,14 @@ RDEPEND="
 	python? (
 		${PYTHON_DEPS}
 		>=dev-python/pygobject-3.21.1:3
-		dev-python/jedi )
+		dev-python/jedi
+		dev-python/lxml )
 	sysprof? ( >=dev-util/sysprof-3.21.90[gtk] )
 	vala? ( $(vala_depend) )
 	webkit? ( >=net-libs/webkit-gtk-2.12:4/37 )
 "
 DEPEND="${RDEPEND}
+	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	>=dev-util/gtk-doc-am-1.11
 	>=sys-devel/gettext-0.19.8
@@ -65,7 +67,7 @@ src_configure() {
 	use python && export PYTHON3_CONFIG="$(python_get_PYTHON_CONFIG)"
 	gnome2_src_configure \
 		--disable-static \
-		$(use_enable cpp idemm) \
+		$(use_enable cpp idemm hello-cpp-plugin) \
 		$(use_enable debug tracing debug) \
 		$(use_enable introspection) \
 		$(use_enable sysprof) \
