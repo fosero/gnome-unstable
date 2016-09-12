@@ -30,7 +30,8 @@ RDEPEND="
 	sys-apps/dbus
 	dev-libs/libxml2:2
 	net-misc/openssh
-	admin? ( sys-auth/polkit )
+	admin? ( sys-auth/polkit
+		sys-libs/libcap )
 	afp? ( >=dev-libs/libgcrypt-1.2.2:0= )
 	archive? ( app-arch/libarchive:= )
 	bluray? ( media-libs/libbluray )
