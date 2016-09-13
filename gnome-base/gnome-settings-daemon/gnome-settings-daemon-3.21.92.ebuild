@@ -25,7 +25,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2[dbus]
 	>=x11-libs/gtk+-3.15.3:3
 	>=gnome-base/gnome-desktop-3.11.1:3=
-	>=gnome-base/gsettings-desktop-schemas-3.19.3
+	>=gnome-base/gsettings-desktop-schemas-3.20
 	>=gnome-base/librsvg-2.36.2:2
 	media-fonts/cantarell
 	media-libs/alsa-lib
