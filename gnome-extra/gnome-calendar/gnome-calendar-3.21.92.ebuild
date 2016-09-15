@@ -20,7 +20,7 @@ RDEPEND="
 	>=gnome-extra/evolution-data-server-3.17.1:=
 	>=net-libs/gnome-online-accounts-3.2.0:=
 	>=gnome-base/gsettings-desktop-schemas-3.21.4
-	>=x11-libs/gtk+-3.21.1:3
+	>=x11-libs/gtk+-3.21.6:3
 "
 DEPEND="${RDEPEND}
 	dev-libs/appstream-glib
