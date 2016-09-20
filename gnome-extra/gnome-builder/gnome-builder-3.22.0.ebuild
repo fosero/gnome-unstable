@@ -32,7 +32,7 @@ RDEPEND="
 	>=dev-libs/libxml2-2.9
 	dev-util/uncrustify
 	sys-devel/clang
-	>x11-libs/gtk+-3.21.5:3[introspection?]
+	>x11-libs/gtk+-3.21.6:3[introspection?]
 	>=x11-libs/gtksourceview-3.21.2:3.0[introspection?]
 	cpp? ( >=dev-cpp/glibmm-2.49.1
 		>=dev-cpp/gtkmm-3.19.12 )
