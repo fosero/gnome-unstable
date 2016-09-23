@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python{3_3,3_4,3_5} )
 VALA_MIN_API_VERSION="0.30"
 VALA_USE_DEPEND="vapigen"
 
-inherit gnome2 python-single-r1 vala virtualx
+inherit autotools eutils gnome2 python-single-r1 vala virtualx
 
 DESCRIPTION="Builder attempts to be an IDE for writing software for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
@@ -17,7 +17,7 @@ LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="amd64 x86"
 
-IUSE="cpp debug +introspection python +sysprof vala webkit"
+IUSE="cpp debug +gca +introspection python +sysprof vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # FIXME: some unittests seem to hang forever
@@ -37,6 +37,7 @@ RDEPEND="
 	cpp? ( >=dev-cpp/glibmm-2.49.1
 		>=dev-cpp/gtkmm-3.19.12 )
 	introspection? ( >=dev-libs/gobject-introspection-1.48:= )
+	gca? ( >=dev-util/gnome-code-assistance-3.16 )
 	python? (
 		${PYTHON_DEPS}
 		>=dev-python/pygobject-3.21.1:3
@@ -59,8 +60,16 @@ pkg_setup() {
 }
 
 src_prepare() {
+
+	eapply ${FILESDIR}/0001-egg-link-to-libm-for-ceil-in-three-grid.patch
+	eapply ${FILESDIR}/0001-gca-Return-original-lang_id-if-no-remap-is-found.patch
+	eapply ${FILESDIR}/0002-gstyle-link-to-libm.patch
+
+	eautoreconf
+
 	use vala && vala_src_prepare
 	gnome2_src_prepare
+
 }
 
 src_configure() {
@@ -70,6 +79,7 @@ src_configure() {
 		$(use_enable cpp idemm hello-cpp-plugin) \
 		$(use_enable debug tracing debug) \
 		$(use_enable introspection) \
+		$(use_enable gca gnome-code-assistance-plugin) \
 		$(use_enable sysprof) \
 		$(use_enable python python-pack-plugin jedi python-gi-imports-completion-plugin) \
 		$(use_enable vala vala-pack-plugin) \

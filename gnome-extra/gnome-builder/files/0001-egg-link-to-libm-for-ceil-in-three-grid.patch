@@ -1,0 +1,25 @@
+From a7da64d99bb8c217ec79b29ef2b950091242230f Mon Sep 17 00:00:00 2001
+From: Marinus Schraal <mschraal@src.gnome.org>
+Date: Tue, 20 Sep 2016 16:10:43 +0200
+Subject: [PATCH] egg: link to libm for ceil in three-grid
+
+https://bugzilla.gnome.org/show_bug.cgi?id=771725
+---
+ contrib/egg/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/contrib/egg/Makefile.am b/contrib/egg/Makefile.am
+index 0f040fc..4aee7a4 100644
+--- a/contrib/egg/Makefile.am
++++ b/contrib/egg/Makefile.am
+@@ -93,6 +93,7 @@ libegg_private_la_CFLAGS = \
+ libegg_private_la_LIBADD = \
+ 	$(EGG_LIBS) \
+ 	$(SHM_LIB) \
++	$(LIBM) \
+ 	$(NULL)
+ 
+ 
+-- 
+2.7.3
+
