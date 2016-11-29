@@ -15,7 +15,7 @@ LICENSE="GPL-2+ LGPL-2.1+"
 SLOT="0/100"
 IUSE="cue elibc_glibc exif ffmpeg firefox-bookmarks flac gif gsf
 gstreamer gtk iptc +iso +jpeg libav +miner-fs mp3 nautilus networkmanager
-pdf playlist png rss stemmer test thunderbird +tiff upnp-av upower +vorbis +xml xmp xps"
+pdf playlist rss stemmer test thunderbird +tiff upnp-av upower +vorbis +xml xmp xps"
 
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
@@ -30,15 +30,16 @@ REQUIRED_USE="
 # glibc-2.12 needed for SCHED_IDLE (see bug #385003)
 RDEPEND="
 	>=app-i18n/enca-1.9
-	>=dev-db/sqlite-3.7.15:=
+	>dev-db/sqlite-3.8.4.2:=
 	>=dev-libs/glib-2.44:2
 	>=dev-libs/gobject-introspection-0.9.5:=
 	>=dev-libs/icu-4.8.1.1:=
 	|| (
 		>=media-gfx/imagemagick-5.2.1[png,jpeg?]
 		media-gfx/graphicsmagick[imagemagick,png,jpeg?] )
-	png? ( >=media-libs/libpng-1.2:0= )
+	>=media-libs/libpng-1.2:0=
 	>=media-libs/libmediaart-1.9:2.0
+	>=x11-libs/pango-1:=
 	sys-apps/util-linux
 
 	cue? ( media-libs/libcue )
@@ -65,7 +66,7 @@ RDEPEND="
 	jpeg? ( virtual/jpeg:0 )
 	upower? ( || ( >=sys-power/upower-0.9 sys-power/upower-pm-utils ) )
 	mp3? ( >=media-libs/taglib-1.6 )
-	networkmanager? ( >=net-misc/networkmanager-0.8 )
+	networkmanager? ( >=net-misc/networkmanager-0.8:= )
 	pdf? (
 		>=x11-libs/cairo-1:=
 		>=app-text/poppler-0.16:=[cairo,utils]
@@ -88,7 +89,6 @@ DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	$(vala_depend)
 	dev-util/gdbus-codegen
-	>=dev-libs/libxslt-1
 	>=dev-util/gtk-doc-am-1.8
 	>=dev-util/intltool-0.40.0
 	>=sys-devel/gettext-0.17
@@ -126,12 +126,6 @@ src_prepare() {
 	create_version_script "www-client/firefox" "Mozilla Firefox" firefox-version.sh
 	create_version_script "mail-client/thunderbird" "Mozilla Thunderbird" thunderbird-version.sh
 
-	# Looks like sorting got fixed but not test reference files
-	sort "${S}"/tests/libtracker-data/functions/functions-tracker-1.out \
-		-o "${S}"/tests/libtracker-data/functions/functions-tracker-1.out || die
-	sort "${S}"/tests/libtracker-data/functions/functions-tracker-2.out \
-		-o "${S}"/tests/libtracker-data/functions/functions-tracker-2.out || die
-
 	eautoreconf # See bug #367975
 	gnome2_src_prepare
 	vala_src_prepare
@@ -165,13 +159,13 @@ src_configure() {
 		--disable-static \
 		--enable-abiword \
 		--enable-artwork \
-		--enable-cfg-man-pages \
 		--enable-dvi \
 		--enable-enca \
 		--enable-guarantee-metadata \
 		--enable-icon \
 		--enable-introspection \
 		--enable-libmediaart \
+		--enable-libpng \
 		--enable-miner-apps \
 		--enable-miner-user-guides \
 		--enable-ps \
@@ -200,7 +194,6 @@ src_configure() {
 		$(use_enable networkmanager network-manager) \
 		$(use_enable pdf poppler) \
 		$(use_enable playlist) \
-		$(use_enable png libpng) \
 		$(use_enable rss miner-rss) \
 		$(use_enable stemmer libstemmer) \
 		$(use_enable test functional-tests) \
