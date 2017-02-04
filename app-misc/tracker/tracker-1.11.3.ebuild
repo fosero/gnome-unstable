@@ -34,6 +34,7 @@ RDEPEND="
 	>=dev-libs/glib-2.44:2
 	>=dev-libs/gobject-introspection-0.9.5:=
 	>=dev-libs/icu-4.8.1.1:=
+	>=sys-libs/libseccomp-2
 	|| (
 		>=media-gfx/imagemagick-5.2.1[png,jpeg?]
 		media-gfx/graphicsmagick[imagemagick,png,jpeg?] )
