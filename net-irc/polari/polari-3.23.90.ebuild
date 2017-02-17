@@ -29,6 +29,7 @@ RDEPEND="${COMMON_DEPEND}
 	app-crypt/libsecret
 	net-im/telepathy-logger
 	net-libs/telepathy-glib
+	>=app-text/gspell-1.3.1
 "
 DEPEND="${COMMON_DEPEND}
 	dev-libs/appstream-glib
