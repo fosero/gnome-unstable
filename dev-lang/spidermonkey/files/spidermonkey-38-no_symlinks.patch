@@ -1,0 +1,79 @@
+diff -uNr mozjs-38.0.0/js/src/Makefile.in mozjs-38.0.0.patched/js/src/Makefile.in
+--- mozjs-38.0.0/js/src/Makefile.in	2015-09-17 22:12:18.000000000 +0200
++++ mozjs-38.0.0.patched/js/src/Makefile.in	2017-02-17 13:51:56.613269030 +0100
+@@ -242,7 +242,7 @@
+ #
+ 
+ install::
+-	$(call py_action,process_install_manifest,--no-remove $(DESTDIR)$(includedir) $(DEPTH)/_build_manifests/install/dist_include)
++	$(call py_action,process_install_manifest,--no-remove --no-symlinks $(DESTDIR)$(includedir) $(DEPTH)/_build_manifests/install/dist_include)
+ 
+ #
+ # END SpiderMonkey header installation
+diff -uNr mozjs-38.0.0/python/mozbuild/mozbuild/action/process_install_manifest.py mozjs-38.0.0.patched/python/mozbuild/mozbuild/action/process_install_manifest.py
+--- mozjs-38.0.0/python/mozbuild/mozbuild/action/process_install_manifest.py	2015-09-17 22:12:22.000000000 +0200
++++ mozjs-38.0.0.patched/python/mozbuild/mozbuild/action/process_install_manifest.py	2017-02-17 14:31:28.274402092 +0100
+@@ -7,7 +7,7 @@
+ import argparse
+ import sys
+ from mozpack.copier import FileCopier
+-from mozpack.manifests import InstallManifest
++from mozpack.manifests import InstallManifest, InstallManifestNoSymlinks
+ 
+ 
+ COMPLETE = 'From {dest}: Kept {existing} existing; Added/updated {updated}; ' \
+@@ -17,10 +17,12 @@
+ def process_manifest(destdir, paths,
+         remove_unaccounted=True,
+         remove_all_directory_symlinks=True,
+-        remove_empty_directories=True):
+-    manifest = InstallManifest()
++        remove_empty_directories=True,
++        no_symlinks=False):
++    manifest_cls = InstallManifestNoSymlinks if no_symlinks else InstallManifest
++    manifest = manifest_cls()
+     for path in paths:
+-        manifest |= InstallManifest(path=path)
++        manifest |= manifest_cls(path=path)
+ 
+     copier = FileCopier()
+     manifest.populate_registry(copier)
+@@ -42,13 +44,16 @@
+         help='Do not remove all directory symlinks from destination.')
+     parser.add_argument('--no-remove-empty-directories', action='store_true',
+         help='Do not remove empty directories from destination.')
++    parser.add_argument('--no-symlinks', action='store_true',
++        help='Do not install symbolic links. Always copy files')
+ 
+     args = parser.parse_args(argv)
+ 
+     result = process_manifest(args.destdir, args.manifests,
+         remove_unaccounted=not args.no_remove,
+         remove_all_directory_symlinks=not args.no_remove_all_directory_symlinks,
+-        remove_empty_directories=not args.no_remove_empty_directories)
++        remove_empty_directories=not args.no_remove_empty_directories,
++        no_symlinks=args.no_symlinks)
+ 
+     print(COMPLETE.format(dest=args.destdir,
+         existing=result.existing_files_count,
+diff -uNr mozjs-38.0.0/python/mozbuild/mozpack/manifests.py mozjs-38.0.0.patched/python/mozbuild/mozpack/manifests.py
+--- mozjs-38.0.0/python/mozbuild/mozpack/manifests.py	2015-09-17 22:12:23.000000000 +0200
++++ mozjs-38.0.0.patched/python/mozbuild/mozpack/manifests.py	2017-02-17 14:10:45.367670903 +0100
+@@ -350,3 +350,17 @@
+ 
+             raise Exception('Unknown install type defined in manifest: %d' %
+                 install_type)
++
++
++class InstallManifestNoSymlinks(InstallManifest):
++    """Like InstallManifest, but files are never installed as symbolic links.
++    Instead, they are always copied.
++    """
++
++    def add_symlink(self, source, dest):
++        """A wrapper that accept symlink entries and install file copies.
++
++        source will be copied to dest.
++        """
++        self.add_copy(source, dest)
++
