@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="6"
-
-inherit eutils gnome2 pax-utils virtualx
+EAPI=6
+inherit gnome2 pax-utils virtualx
 
 DESCRIPTION="Javascript bindings for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Projects/Gjs"
@@ -12,17 +11,17 @@ HOMEPAGE="https://wiki.gnome.org/Projects/Gjs"
 LICENSE="MIT || ( MPL-1.1 LGPL-2+ GPL-2+ )"
 SLOT="0"
 IUSE="+cairo examples gtk test"
-KEYWORDS="alpha amd64 arm ia64 ppc ppc64 sparc x86"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86"
 
 RDEPEND="
-	>=dev-libs/glib-2.42:2
+	>=dev-libs/glib-2.36:2
 	>=dev-libs/gobject-introspection-1.41.4:=
 
 	sys-libs/readline:0
-	dev-lang/spidermonkey:24
+	dev-lang/spidermonkey:38
 	virtual/libffi
 	cairo? ( x11-libs/cairo[X] )
-	gtk? ( x11-libs/gtk+:3 )
+	gtk? ( >=x11-libs/gtk+-3.20:3 )
 "
 DEPEND="${RDEPEND}
 	gnome-base/gnome-common
@@ -30,13 +29,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	test? ( sys-apps/dbus )
 "
-
-src_prepare() {
-	# Disable broken unittests
-	epatch "${FILESDIR}"/${PN}-1.43.3-disable-unittest-*.patch
-
-	gnome2_src_prepare
-}
 
 src_configure() {
 	# FIXME: add systemtap/dtrace support, like in glib:2
@@ -47,16 +39,17 @@ src_configure() {
 		--disable-dtrace \
 		--disable-coverage \
 		$(use_with cairo cairo) \
-		$(use_with gtk)
+		$(use_with gtk) \
+		$(use_with test dbus-tests) \
+		$(use_with test xvfb-tests)
 }
 
-# FIXME: tests did undergo some optional changes, needs checking
 src_test() {
-	Xemake check
+	virtx emake check
 }
 
 src_install() {
-	# installation sometimes fails in parallel
+	# installation sometimes fails in parallel, bug #???
 	gnome2_src_install -j1
 
 	if use examples; then
