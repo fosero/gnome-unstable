@@ -34,6 +34,8 @@ RDEPEND="
 	freebox? ( net-dns/avahi )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.17.91 )
 	lua? (
+		dev-util/gperf
+		dev-libs/libxml2
 		>=dev-lang/lua-5.3
 		app-arch/libarchive
 		>=dev-libs/totem-pl-parser-3.4.1 )
@@ -72,7 +74,7 @@ src_configure() {
 		--enable-gravatar \
 		--enable-jamendo \
 		--enable-lastfm-albumart \
-		--enable-localmetadata \
+		--enable-local-metadata \
 		--enable-magnatune \
 		--enable-metadata-store \
 		--enable-podcasts \
