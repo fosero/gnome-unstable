@@ -18,7 +18,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
 LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="clang cpp debug flatpak +gca +git python sysprof vala webkit"
+IUSE="clang debug flatpak +gca +git python sysprof vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # When bumping, pay attention to all the included plugins/*/configure.ac files and the requirements within.
@@ -57,7 +57,7 @@ RDEPEND="
 	gca? ( dev-util/gnome-code-assistance )
 	python? (	dev-python/jedi
 			dev-python/lxml )
-	sysprof? ( >=dev-util/sysprof-3.22.2[gtk] )
+	sysprof? ( >=dev-util/sysprof-3.23.91[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
 	vala? ( $(vala_depend) )
@@ -68,7 +68,6 @@ DEPEND="${RDEPEND}
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
-	>=dev-util/gtk-doc-am-1.11
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 	!<sys-apps/sandbox-2.10-r3
@@ -113,7 +112,6 @@ src_configure() {
 		--enable-rdtscp \
 		$(use_enable gca gnome-code-assistance-plugin) \
 		$(use_enable debug tracing debug) \
-		$(use_enable cpp idemm hello-cpp-plugin) \
 		$(use_enable python python-pack-plugin jedi python-gi-imports-completion-plugin) \
 		$(use_enable vala vala-pack-plugin) \
 		$(use_enable webkit) \
