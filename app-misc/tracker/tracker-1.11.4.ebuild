@@ -59,9 +59,7 @@ RDEPEND="
 	gstreamer? (
 		media-libs/gstreamer:1.0
 		media-libs/gst-plugins-base:1.0 )
-	gtk? (
-		>=dev-libs/libgee-0.3:0.8
-		>=x11-libs/gtk+-3:3 )
+	gtk? ( >=x11-libs/gtk+-3:3 )
 	iptc? ( media-libs/libiptcdata )
 	iso? ( >=sys-libs/libosinfo-0.2.9:= )
 	jpeg? ( virtual/jpeg:0 )
@@ -94,7 +92,6 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40.0
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
-	gtk? ( >=dev-libs/libgee-0.3:0.8 )
 	test? (
 		>=dev-libs/dbus-glib-0.82-r1
 		>=sys-apps/dbus-1.3.1[X] )
