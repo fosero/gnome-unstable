@@ -24,9 +24,10 @@ COMMON_DEPEND="
 	>=dev-libs/libxslt-1.1.7
 	>=gnome-base/gsettings-desktop-schemas-0.0.1
 	>=net-dns/avahi-0.6.22[dbus]
-	>=net-libs/webkit-gtk-2.15.4:4
+	>=net-libs/webkit-gtk-2.15.90:4
 	>=net-libs/libsoup-2.48:2.4
 	>=x11-libs/gtk+-3.19.1:3
+	>=x11-libs/gdk-pixbuf-2.36.5:2
 	>=x11-libs/libnotify-0.5.1:=
 	gnome-base/gnome-desktop:3=
 	>=dev-libs/json-glib-0.14
