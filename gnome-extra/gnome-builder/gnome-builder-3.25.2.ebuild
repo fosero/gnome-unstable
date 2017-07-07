@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=6
-PYTHON_COMPAT=( python{3_3,3_4,3_5} )
+PYTHON_COMPAT=( python{3_3,3_4,3_5,3_6} )
 VALA_MIN_API_VERSION="0.30"
 VALA_USE_DEPEND="vapigen"
 DISABLE_AUTOFORMATTING=1
@@ -41,9 +41,10 @@ RDEPEND="
 	>=dev-python/pygobject-3.22.0:3
 	>=dev-libs/libxml2-2.9
 	>=x11-libs/pango-1.38.0
-	>=dev-libs/libpeas-1.18.0
+	>=dev-libs/libpeas-1.18
 	>=dev-libs/json-glib-1.2.0
 	>=app-text/gspell-1.2
+	>=app-text/enchant-1.6.0
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
 	flatpak? (  	>=sys-apps/flatpak-0.8
@@ -122,6 +123,7 @@ src_configure() {
 		$(use_enable sysprof sysprof-plugin) \
 		$(use_enable flatpak flatpak-plugin) \
 		--enable-terminal-plugin \
+                --with-channel=distro \
 		--disable-static
 }
 
