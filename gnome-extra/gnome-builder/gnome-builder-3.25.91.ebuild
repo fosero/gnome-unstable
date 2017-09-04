@@ -9,7 +9,7 @@ VALA_USE_DEPEND="vapigen"
 DISABLE_AUTOFORMATTING=1
 FORCE_PRINT_ELOG=1
 
-inherit gnome2 python-single-r1 vala virtualx readme.gentoo-r1
+inherit gnome2 python-single-r1 vala virtualx readme.gentoo-r1 meson
 
 DESCRIPTION="Builder attempts to be an IDE for writing software for GNOME"
 HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
@@ -18,7 +18,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
 LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="clang debug flatpak +gca +git python sysprof vala webkit"
+IUSE="clang debug +devhelp flatpak +gca +git python sysprof vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # When bumping, pay attention to all the included plugins/*/configure.ac files and the requirements within.
@@ -35,19 +35,24 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 # An introspection USE flag of a dep is required if any introspection based language plugin wants to use it. Last full check at 3.22.4
 RDEPEND="
 	>=x11-libs/gtk+-3.22.1:3[introspection]
-	>=dev-libs/glib-2.50.0:2[dbus]
+	>=dev-libs/glib-2.53.2:2[dbus]
 	>=x11-libs/gtksourceview-3.22.0:3.0[introspection]
 	>=dev-libs/gobject-introspection-1.48.0:=
 	>=dev-python/pygobject-3.22.0:3
 	>=dev-libs/libxml2-2.9
 	>=x11-libs/pango-1.38.0
-	>=dev-libs/libpeas-1.18
+	>=dev-libs/libpeas-1.21
 	>=dev-libs/json-glib-1.2.0
 	>=app-text/gspell-1.2
 	>=app-text/enchant-1.6.0
+	>=dev-libs/libdazzle-${PV}
+	dev-libs/template-glib
+	dev-libs/jsonrpc-glib
+	devhelp? ( >=dev-util/devhelp-3.25 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
 	flatpak? (  	>=sys-apps/flatpak-0.8
+			dev-util/flatpak-builder
 			>=net-libs/libsoup-2.52
 			>=dev-libs/libgit2-0.25[ssh,threads]
 			>=dev-libs/libgit2-glib-0.25[ssh] )
@@ -74,25 +79,6 @@ DEPEND="${RDEPEND}
 	!<sys-apps/sandbox-2.10-r3
 "
 
-# Tests fail if all plugins aren't enabled (webkit, clang, devhelp, perhaps more)
-RESTRICT="test"
-
-DOC_CONTENTS='gnome-builder can use various other dependencies on runtime to provide
-extra capabilities beyond these expressed via USE flags. Some of these
-that are currently available with packages include:
-
-* dev-util/ctags with exuberant-ctags selected via "eselect ctags" for
-  C, C++, Python, JavaScript, CSS, HTML and Ruby autocompletion, semantic
-  highlighting and symbol resolving support.
-* dev-python/jedi and dev-python/lxml for more accurate Python
-  autocompletion support.
-* dev-util/meson for integration with the Meson build system.
-* dev-util/cargo for integration with the Rust Cargo build system.
-'
-# jhbuild support
-# rust language server via rls
-# autotools stuff for autotools plugin
-
 pkg_setup() {
 	python-single-r1_pkg_setup
 }
@@ -106,40 +92,53 @@ src_configure() {
 	export PYTHON3_CONFIG="$(python_get_PYTHON_CONFIG)"
 	# idemm is C++ wrapper for libide. Once that's needed by something, we might want to
 	# consider a split package instead of USE flag. Deps are in libidemm/configure.ac
-	gnome2_src_configure \
-		--disable-idemm \
-		--enable-editorconfig \
-		--enable-introspection \
-		--enable-rdtscp \
-		$(use_enable gca gnome-code-assistance-plugin) \
-		$(use_enable debug tracing debug) \
-		$(use_enable python python-pack-plugin jedi python-gi-imports-completion-plugin) \
-		$(use_enable vala vala-pack-plugin) \
-		$(use_enable webkit) \
-		$(use_enable webkit html-preview-plugin) \
-		$(use_enable clang clang-plugin) \
-		$(use_enable git git-plugin) \
-		$(use_enable git contributing-plugin) \
-		$(use_enable sysprof sysprof-plugin) \
-		$(use_enable flatpak flatpak-plugin) \
-		--enable-terminal-plugin \
-                --with-channel=distro \
-		--disable-static
+
+	local emesonargs=(
+		-Dwith_webkit=$(usex webkit true false)
+		-Dwith_introspection=false
+		-Denable_rdtscp=true
+		-Dwith_vapi=true
+		-Dwith_devhelp=$(usex devhelp true false)
+		-Dwith_vala_pack=false
+	)
+
+
+#	gnome2_src_configure \
+#		--disable-idemm \
+#		--enable-editorconfig \
+#		--enable-introspection \
+#		--enable-rdtscp \
+#		$(use_enable gca gnome-code-assistance-plugin) \
+#		$(use_enable debug tracing debug) \
+#		$(use_enable python python-pack-plugin jedi python-gi-imports-completion-plugin) \
+#		$(use_enable vala vala-pack-plugin) \
+#		$(use_enable webkit) \
+#		$(use_enable webkit html-preview-plugin) \
+#		$(use_enable clang clang-plugin) \
+#		$(use_enable git git-plugin) \
+#		$(use_enable git contributing-plugin) \
+#		$(use_enable sysprof sysprof-plugin) \
+#		$(use_enable flatpak flatpak-plugin) \
+#		--enable-terminal-plugin \
+ #               --with-channel=distro \
+#		--disable-static
+		meson_src_configure
 }
 
 src_install() {
 	gnome2_src_install
-	readme.gentoo_create_doc
+	meson_src_install
+#	readme.gentoo_create_doc
 }
 
 pkg_postinst() {
 	gnome2_pkg_postinst
-	readme.gentoo_print_elog
+#	readme.gentoo_print_elog
 }
 
-src_test() {
-	# FIXME: this should be handled at eclass level
-	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data/gsettings" || die
-
-	GSETTINGS_SCHEMA_DIR="${S}/data/gsettings" virtx emake check
-}
+#src_test() {
+#	# FIXME: this should be handled at eclass level
+#	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/data/gsettings" || die
+#
+#	GSETTINGS_SCHEMA_DIR="${S}/data/gsettings" virtx emake check
+#}
