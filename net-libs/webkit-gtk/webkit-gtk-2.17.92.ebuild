@@ -51,7 +51,7 @@ RDEPEND="
 	>=media-libs/harfbuzz-1.3.3:=[icu(+)]
 	>=media-libs/libpng-1.4:0=
 	media-libs/libwebp:=
-	dev-libs/libgcrypt:0=
+	>=dev-libs/libgcrypt-1.7:0=
 	>=net-libs/libsoup-2.42:2.4[introspection?]
 	>=x11-libs/cairo-1.10.2:=
 	>=x11-libs/gtk+-3.14:3[introspection?]
