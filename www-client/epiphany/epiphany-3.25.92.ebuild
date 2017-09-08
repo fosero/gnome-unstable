@@ -58,8 +58,8 @@ src_configure() {
 	# firefox sync storage is not quite ready in 3.24; deps on hogweed/nettle
 	local emesonargs=(
 		-Ddistributor_name=fosero \
-		-Denable_https_everywhere=false \
-		-Denable_unit_tests=$(usex test true false)
+		-Dhttps_everywhere=false \
+		-Dunit_tests=$(usex test true false)
 	)
 	meson_src_configure
 }
