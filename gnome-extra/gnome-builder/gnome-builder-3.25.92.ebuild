@@ -46,8 +46,8 @@ RDEPEND="
 	>=app-text/gspell-1.2
 	>=app-text/enchant-1.6.0
 	>=dev-libs/libdazzle-${PV}
-	dev-libs/template-glib
-	dev-libs/jsonrpc-glib
+	>=dev-libs/template-glib-3.25.92
+	>=dev-libs/jsonrpc-glib-3.25.92
 	devhelp? ( >=dev-util/devhelp-3.25 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -94,6 +94,7 @@ src_configure() {
 	# consider a split package instead of USE flag. Deps are in libidemm/configure.ac
 
 	local emesonargs=(
+		-Dwith_gdb=false
 		-Dwith_webkit=$(usex webkit true false)
 		-Dwith_introspection=false
 		-Denable_rdtscp=true
