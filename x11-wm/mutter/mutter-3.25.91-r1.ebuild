@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit gnome2 virtualx
+inherit gnome2 virtualx eutils
 
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="https://git.gnome.org/browse/mutter/"
@@ -100,6 +100,8 @@ src_prepare() {
 		-i cogl/configure || die
 	sed -e 's/$CFLAGS -g -O/$CFLAGS /' \
 		-i configure || die
+
+	epatch ${FILESDIR}/${P}-channel_inversion.patch
 }
 
 src_configure() {
