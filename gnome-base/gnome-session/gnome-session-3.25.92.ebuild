@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 inherit gnome2
@@ -10,7 +9,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE="doc elibc_FreeBSD ipv6 systemd"
 
 # x11-misc/xdg-user-dirs{,-gtk} are needed to create the various XDG_*_DIRs, and
@@ -25,7 +24,9 @@ COMMON_DEPEND="
 	>=gnome-base/gnome-desktop-3.18:3=
 	elibc_FreeBSD? ( dev-libs/libexecinfo )
 
-	virtual/opengl
+	media-libs/mesa[egl,gles2]
+
+	media-libs/libepoxy
 	x11-libs/libSM
 	x11-libs/libICE
 	x11-libs/libXau
@@ -45,7 +46,7 @@ COMMON_DEPEND="
 # gnome-themes-standard is needed for the failwhale dialog themeing
 # sys-apps/dbus[X] is needed for session management
 RDEPEND="${COMMON_DEPEND}
-	gnome-base/gnome-settings-daemon
+	>=gnome-base/gnome-settings-daemon-3.23.2
 	>=gnome-base/gsettings-desktop-schemas-0.1.7
 	x11-themes/adwaita-icon-theme
 	sys-apps/dbus[X]
@@ -55,10 +56,9 @@ RDEPEND="${COMMON_DEPEND}
 	)
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-lang/perl-5
-	>=sys-devel/gettext-0.10.40
 	dev-libs/libxslt
 	>=dev-util/intltool-0.40.6
+	>=sys-devel/gettext-0.10.40
 	virtual/pkgconfig
 	!<gnome-base/gdm-2.20.4
 	doc? (
@@ -114,7 +114,7 @@ src_install() {
 pkg_postinst() {
 	gnome2_pkg_postinst
 
-	if ! has_version gnome-base/gdm && ! has_version kde-base/kdm; then
+	if ! has_version gnome-base/gdm && ! has_version x11-misc/sddm; then
 		ewarn "If you use a custom .xinitrc for your X session,"
 		ewarn "make sure that the commands in the xinitrc.d scripts are run."
 	fi
