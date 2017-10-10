@@ -23,7 +23,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~spa
 # We force glib and g-i to be in sync by this way as explained in bug #518424
 RDEPEND="
 	>=dev-libs/gobject-introspection-common-${PV}
-	>=dev-libs/glib-2.$(get_version_component_range 2).7:2
+	>=dev-libs/glib-2.$(get_version_component_range 2):2
 	doctool? ( dev-python/mako[${PYTHON_USEDEP}] )
 	virtual/libffi:=
 	virtual/pkgconfig
