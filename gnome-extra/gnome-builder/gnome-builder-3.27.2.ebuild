@@ -1,10 +1,9 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 PYTHON_COMPAT=( python{3_3,3_4,3_5,3_6} )
-VALA_MIN_API_VERSION="0.30"
+VALA_MIN_API_VERSION="0.34"
 VALA_USE_DEPEND="vapigen"
 DISABLE_AUTOFORMATTING=1
 FORCE_PRINT_ELOG=1
@@ -18,7 +17,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
 LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="clang debug +devhelp flatpak +gca +git python sysprof vala webkit"
+IUSE="clang debug +devhelp doc flatpak +gca +gdb +git introspection python sysprof vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # When bumping, pay attention to all the included plugins/*/configure.ac files and the requirements within.
@@ -41,14 +40,14 @@ RDEPEND="
 	>=dev-python/pygobject-3.22.0:3
 	>=dev-libs/libxml2-2.9
 	>=x11-libs/pango-1.38.0
-	>=dev-libs/libpeas-1.21
+	>=dev-libs/libpeas-1.22
 	>=dev-libs/json-glib-1.2.0
 	>=app-text/gspell-1.2
 	>=app-text/enchant-1.6.0
 	>=dev-libs/libdazzle-${PV}
-	>=dev-libs/template-glib-3.25.92
-	>=dev-libs/jsonrpc-glib-3.25.92
-	devhelp? ( >=dev-util/devhelp-3.25 )
+	>=dev-libs/template-glib-3.27.2
+	>=dev-libs/jsonrpc-glib-3.27.1
+	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
 	flatpak? (  	>=sys-apps/flatpak-0.8
@@ -63,20 +62,25 @@ RDEPEND="
 	gca? ( dev-util/gnome-code-assistance )
 	python? (	dev-python/jedi
 			dev-python/lxml )
-	sysprof? ( >=dev-util/sysprof-3.23.91[gtk] )
+	sysprof? ( >=dev-util/sysprof-3.26[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
-	vala? ( $(vala_depend) )
+	vala? ( $(vala_depend)
+		dev-libs/libdazzle[vala] )
 "
 # desktop-file-utils for desktop-file-validate check in configure for 3.22.4
 # mm-common due to not fully clean --disable-idemm behaviour, recheck on bump
 DEPEND="${RDEPEND}
+	>=dev-util/meson-0.42
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 	!<sys-apps/sandbox-2.10-r3
+	introspection? ( dev-libs/gobject-introspection
+			 dev-libs/libdazzle[introspection] )
+	doc? ( dev-python/sphinx )
 "
 
 pkg_setup() {
@@ -94,13 +98,22 @@ src_configure() {
 	# consider a split package instead of USE flag. Deps are in libidemm/configure.ac
 
 	local emesonargs=(
-		-Dwith_gdb=false
-		-Dwith_webkit=$(usex webkit true false)
-		-Dwith_introspection=false
 		-Denable_rdtscp=true
-		-Dwith_vapi=true
 		-Dwith_devhelp=$(usex devhelp true false)
-		-Dwith_vala_pack=false
+		-Dwith_docs=$(usex doc true false)
+		-Dwith_help=$(usex doc true false)
+		-Dwith_flatpak=$(usex flatpak true false)
+		-Dwith_gdb=$(usex gdb true false)
+		-Dwith_git=$(usex git true false)
+		-Dwith_gnome_code_assistance=$(usex gca true false)
+		-Dwith_introspection=$(usex introspection true false)
+		-Dwith_jedi=$(usex python true false)
+		-Dwith_python_gi_imports_completion=$(usex python true false)
+		-Dwith_python_pack=$(usex python true false)
+		-Dwith_sysprof=$(usex sysprof true false)
+		-Dwith_vala_pack=$(usex vala true false)
+		-Dwith_vapi=$(usex vala true false)
+		-Dwith_webkit=$(usex webkit true false)
 	)
 
 
