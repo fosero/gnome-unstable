@@ -15,7 +15,7 @@ SRC_URI="http://www.webkitgtk.org/releases/${MY_P}.tar.xz"
 
 LICENSE="LGPL-2+ BSD"
 SLOT="4/37" # soname version of libwebkit2gtk-4.0
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~x86-macos"
+KEYWORDS="amd64"
 
 IUSE="aqua coverage doc +egl +geolocation gles2 gnome-keyring +gstreamer +introspection +jit libnotify nsplugin +opengl spell wayland +webgl X"
 
@@ -50,6 +50,7 @@ RDEPEND="
 	>=media-libs/freetype-2.4.2:2
 	>=media-libs/harfbuzz-1.3.3:=[icu(+)]
 	>=media-libs/libpng-1.4:0=
+	>=app-arch/woff2-1.0.2
 	media-libs/libwebp:=
 	>=dev-libs/libgcrypt-1.7:0=
 	>=net-libs/libsoup-2.42:2.4[introspection?]
@@ -89,6 +90,7 @@ RDEPEND="
 
 # paxctl needed for bug #407085
 # Need real bison, not yacc
+# Need File-Copy-Recursive during build (?)
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	${RUBY_DEPS}
@@ -103,6 +105,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 
 	dev-lang/perl
+	dev-perl/File-Copy-Recursive
 	virtual/perl-Data-Dumper
 	virtual/perl-Carp
 
@@ -119,18 +122,6 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/${MY_P}"
 
 CHECKREQS_DISK_BUILD="18G" # and even this might not be enough, bug #417307
-
-PATCHES=(
-	# https://bugs.gentoo.org/show_bug.cgi?id=555504
-	"${FILESDIR}"/${PN}-2.8.5-fix-ia64-build.patch
-
-	# https://bugs.gentoo.org/show_bug.cgi?id=564352
-	# https://bugs.webkit.org/show_bug.cgi?id=167283
-	"${FILESDIR}"/${PN}-2.8.5-fix-alpha-build.patch
-
-	# Avoid perl[ithreads] build time requirement as that would be very very messy
-#	"${FILESDIR}"/${PN}-2.16.1-avoid-perl-ithreads.patch
-)
 
 pkg_pretend() {
 	if [[ ${MERGE_TYPE} != "binary" ]] ; then
@@ -163,30 +154,6 @@ src_configure() {
 
 	# Arches without JIT support also need this to really disable it in all places
 	use jit || append-cppflags -DENABLE_JIT=0 -DENABLE_YARR_JIT=0 -DENABLE_ASSEMBLER=0
-
-	# It does not compile on alpha without this in LDFLAGS
-	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=648761
-	use alpha && append-ldflags "-Wl,--no-relax"
-
-	# ld segfaults on ia64 with LDFLAGS --as-needed, bug #555504
-	use ia64 && append-ldflags "-Wl,--no-as-needed"
-
-	# Sigbuses on SPARC with mcpu and co., bug #???
-	use sparc && filter-flags "-mvis"
-
-	# https://bugs.webkit.org/show_bug.cgi?id=42070 , #301634
-	use ppc64 && append-flags "-mminimal-toc"
-
-	# Try to use less memory, bug #469942 (see Fedora .spec for reference)
-	# --no-keep-memory doesn't work on ia64, bug #502492
-	if ! use ia64; then
-		append-ldflags "-Wl,--no-keep-memory"
-	fi
-
-	# We try to use gold when possible for this package
-#	if ! tc-ld-is-gold ; then
-#		append-ldflags "-Wl,--reduce-memory-overheads"
-#	fi
 
 	# older glibc needs this for INTPTR_MAX, bug #533976
 	if has_version "<sys-libs/glibc-2.18" ; then
@@ -252,19 +219,24 @@ src_configure() {
 		-DENABLE_X11_TARGET=$(usex X)
 		-DENABLE_OPENGL=${opengl_enabled}
 		-DENABLE_ACCELERATED_2D_CANVAS=${canvas_enabled}
+		-DENABLE_MEDIA_SOURCE=ON
 		-DCMAKE_BUILD_TYPE=Release
 		-DPORT=GTK
+		-DUSE_WOFF2=ON
 		${ruby_interpreter}
 	)
+
+	# Use SYSTEM_MALLOC https://bugs.webkit.org/show_bug.cgi?id=179914 2.19.2
+#		-DUSE_SYSTEM_MALLOC=ON
 
 	# Allow it to use GOLD when possible as it has all the magic to
 	# detect when to use it and using gold for this concrete package has
 	# multiple advantages and is also the upstream default, bug #585788
-#	if tc-ld-is-gold ; then
-#		mycmakeargs+=( -DUSE_LD_GOLD=ON )
-#	else
-#		mycmakeargs+=( -DUSE_LD_GOLD=OFF )
-#	fi
+	if tc-ld-is-gold ; then
+		mycmakeargs+=( -DUSE_LD_GOLD=ON )
+	else
+		mycmakeargs+=( -DUSE_LD_GOLD=OFF )
+	fi
 
 	cmake-utils_src_configure
 }
