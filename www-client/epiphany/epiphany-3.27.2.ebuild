@@ -16,13 +16,14 @@ KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~sparc ~x86"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.52.0:2[dbus]
 	>=x11-libs/gtk+-3.22.13:3
-	>=net-libs/webkit-gtk-2.17.4:4=
+	>=net-libs/webkit-gtk-2.19.1:4=
 	>=x11-libs/cairo-1.2
 	>=app-crypt/gcr-3.5.5:=
 	>=x11-libs/gdk-pixbuf-2.36.5:2
 	>=gnome-base/gnome-desktop-2.91.2:3=
 	dev-libs/icu:=
 	>=dev-libs/json-glib-1.2.4
+	>=dev-libs/libdazzle-3.25.90
 	>=x11-libs/libnotify-0.5.1:=
 	>=app-crypt/libsecret-0.14
 	>=net-libs/libsoup-2.48:2.4
@@ -38,7 +39,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 DEPEND="${COMMON_DEPEND}
 	>=sys-devel/gettext-0.19.8
-	>=dev-util/meson-0.37
+	>=dev-util/meson-0.42
 	virtual/pkgconfig
 "
 
