@@ -1,3 +1,4 @@
+# WARNING: THIS EBUILD IS BROKEN
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
@@ -25,9 +26,9 @@ PDEPEND=">=dev-libs/glib-${PV}:2"
 S="${WORKDIR}/glib-${PV}/gio/gdbus-2.0/codegen"
 
 python_prepare_all() {
-	PATCHES=(
-		"${FILESDIR}/0001-gdbus-gentoo-fix.patch"
-	)
+#	PATCHES=(
+#		"${FILESDIR}/0001-gdbus-gentoo-fix.patch"
+#	)
 	distutils-r1_python_prepare_all
 
 	sed -e 's:#!/usr/bin/env @PYTHON@:#!/usr/bin/env python:' gdbus-codegen.in > gdbus-codegen || die
