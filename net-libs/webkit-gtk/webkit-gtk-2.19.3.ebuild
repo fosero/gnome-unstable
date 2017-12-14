@@ -148,6 +148,13 @@ pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
+src_prepare() {
+	default
+
+	# https://bugs.webkit.org/show_bug.cgi?id=180799
+	epatch ${FILESDIR}/${P}-2d_canvas.patch
+}
+
 src_configure() {
 	# Respect CC, otherwise fails on prefix #395875
 	tc-export CC
@@ -225,9 +232,6 @@ src_configure() {
 		-DUSE_WOFF2=ON
 		${ruby_interpreter}
 	)
-
-	# Use SYSTEM_MALLOC https://bugs.webkit.org/show_bug.cgi?id=179914 2.19.2
-#		-DUSE_SYSTEM_MALLOC=ON
 
 	# Allow it to use GOLD when possible as it has all the magic to
 	# detect when to use it and using gold for this concrete package has
