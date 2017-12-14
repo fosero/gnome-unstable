@@ -16,20 +16,19 @@ KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~sparc ~x86"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.52.0:2[dbus]
 	>=x11-libs/gtk+-3.22.13:3
-	>=net-libs/webkit-gtk-2.19.1:4=
+	>=net-libs/webkit-gtk-2.19.2:4=
 	>=x11-libs/cairo-1.2
 	>=app-crypt/gcr-3.5.5:=
 	>=x11-libs/gdk-pixbuf-2.36.5:2
 	>=gnome-base/gnome-desktop-2.91.2:3=
 	dev-libs/icu:=
 	>=dev-libs/json-glib-1.2.4
-	>=dev-libs/libdazzle-3.25.90
 	>=x11-libs/libnotify-0.5.1:=
 	>=app-crypt/libsecret-0.14
 	>=net-libs/libsoup-2.48:2.4
 	>=dev-libs/libxml2-2.6.12:2
 	>=dev-libs/libxslt-1.1.7
-	>=dev-libs/nettle-3.2
+	>=dev-libs/nettle-3.4
 	dev-db/sqlite:3
 	>=app-text/iso-codes-0.35
 "
