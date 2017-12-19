@@ -15,7 +15,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE="flickr test upnp-av"
 
 COMMON_DEPEND="
-	>=app-misc/tracker-1.99:=[miner-fs]
+	>=app-misc/tracker-2:=
+	>=app-misc/tracker-miners-2:=[miner-fs]
 	>=dev-libs/glib-2.44:2
 	gnome-base/gsettings-desktop-schemas
 	>=dev-libs/libgdata-0.15.2:0=[gnome-online-accounts]
@@ -28,7 +29,7 @@ COMMON_DEPEND="
 	>=net-libs/libgfbgraph-0.2.1:0.2
 	sci-geosciences/geocode-glib
 	>=x11-libs/cairo-1.14
-	x11-libs/gdk-pixbuf:2
+	>=x11-libs/gdk-pixbuf-2.32:2
 	>=x11-libs/gtk+-3.22.16:3
 "
 # gnome-online-miners is also used for google, facebook, DLNA - not only flickr
