@@ -151,9 +151,9 @@ pkg_setup() {
 src_prepare() {
 	default
 
-	# https://bugs.webkit.org/show_bug.cgi?id=180799
-	epatch ${FILESDIR}/${P}-2d_canvas.patch
+	epatch ${FILESDIR}/${PN}-2.19.3-2d_canvas.patch
 }
+
 
 src_configure() {
 	# Respect CC, otherwise fails on prefix #395875
