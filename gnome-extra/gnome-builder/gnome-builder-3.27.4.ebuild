@@ -44,7 +44,7 @@ RDEPEND="
 	>=app-text/enchant-1.6.0
 	>=dev-libs/libdazzle-${PV}
 	>=dev-libs/template-glib-3.27.2
-	>=dev-libs/jsonrpc-glib-3.27.1
+	>=dev-libs/jsonrpc-glib-3.27.4
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
