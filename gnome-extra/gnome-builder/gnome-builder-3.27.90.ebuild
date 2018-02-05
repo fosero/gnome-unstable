@@ -43,8 +43,8 @@ RDEPEND="
 	>=app-text/gspell-1.2
 	>=app-text/enchant-1.6.0
 	>=dev-libs/libdazzle-${PV}
-	>=dev-libs/template-glib-3.27.2
-	>=dev-libs/jsonrpc-glib-3.27.4
+	>=dev-libs/template-glib-3.27.90
+	>=dev-libs/jsonrpc-glib-3.27.90
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -69,7 +69,7 @@ RDEPEND="
 # desktop-file-utils for desktop-file-validate check in configure for 3.22.4
 # mm-common due to not fully clean --disable-idemm behaviour, recheck on bump
 DEPEND="${RDEPEND}
-	>=dev-util/meson-0.42
+	>=dev-util/meson-0.44
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
