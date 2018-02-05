@@ -148,13 +148,6 @@ pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
-src_prepare() {
-	default
-
-	epatch ${FILESDIR}/${PN}-2.19.3-2d_canvas.patch
-}
-
-
 src_configure() {
 	# Respect CC, otherwise fails on prefix #395875
 	tc-export CC
