@@ -44,7 +44,7 @@ RDEPEND="
 	>=app-text/enchant-1.6.0
 	>=dev-libs/libdazzle-${PV}
 	>=dev-libs/template-glib-3.27.90
-	>=dev-libs/jsonrpc-glib-3.27.90
+	>=dev-libs/jsonrpc-glib-3.27.91
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -60,7 +60,7 @@ RDEPEND="
 	gca? ( dev-util/gnome-code-assistance )
 	python? (	dev-python/jedi
 			dev-python/lxml )
-	sysprof? ( >=dev-util/sysprof-3.26[gtk] )
+	sysprof? ( >=dev-util/sysprof-3.27.91[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
 	vala? ( $(vala_depend)
