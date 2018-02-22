@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
-inherit gnome2 linux-info systemd
+inherit gnome2 linux-info systemd meson
 
 DESCRIPTION="System-wide Linux Profiler"
 HOMEPAGE="http://sysprof.com/"
@@ -12,19 +11,19 @@ HOMEPAGE="http://sysprof.com/"
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug gtk systemd"
+IUSE="gtk"
 
 RDEPEND="
 	>=dev-libs/glib-2.44:2
-	gtk? ( >=x11-libs/gtk+-3.21.5:3 )
-	systemd? (
-		sys-auth/polkit
-		>=sys-apps/systemd-222 )
+	gtk? ( >=x11-libs/gtk+-3.22.0:3 )
+	sys-auth/polkit
+	>=sys-apps/systemd-222
 "
 DEPEND="${RDEPEND}
 	app-text/yelp-tools
 	>=sys-devel/gettext-0.19.6
 	>=sys-kernel/linux-headers-2.6.32
+	dev-libs/appstream-glib
 	virtual/pkgconfig
 "
 
@@ -34,15 +33,23 @@ pkg_pretend() {
 }
 
 src_configure() {
-	# introspection & vala not use in build system
-	gnome2_src_configure \
-		$(use_enable debug) \
-		$(use_enable gtk) \
-		--disable-introspection \
-		--disable-static \
-		--disable-vala \
-		--with-sysprofd=$(usex systemd bundled no) \
-		--with-systemdsystemunitdir=$(systemd_get_systemunitdir)
+
+	local emesonargs=(
+		-Ddebugdir="/usr/lib/debug"
+		-Denable_gtk=$(usex gtk true false)
+		-Dsystemdunitdir=$(systemd_get_systemunitdir)
+		-Dwith_sysprofd=bundled
+	)
+
+	meson_src_configure
+
+}
+
+src_install() {
+
+	meson_src_install
+	gnome2_src_install
+
 }
 
 pkg_postinst() {
