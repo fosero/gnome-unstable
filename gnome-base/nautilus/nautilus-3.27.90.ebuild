@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -12,7 +12,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Nautilus"
 LICENSE="GPL-2+ LGPL-2+ FDL-1.1"
 SLOT="0"
 # keeping intro keyword for bw compat
-IUSE="doc exif gnome +introspection packagekit +previewer selinux sendto tracker xmp"
+IUSE="doc gnome +introspection packagekit +previewer selinux sendto"
 
 KEYWORDS="amd64 ~ia64 x86 ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux"
 
@@ -27,7 +27,7 @@ COMMON_DEPEND="
 	>=app-arch/gnome-autoar-0.2.1
 	>=dev-libs/glib-2.49.1:2[dbus]
 	>=x11-libs/pango-1.28.3
-	>=x11-libs/gtk+-3.21.6:3
+	>=x11-libs/gtk+-3.22.26:3
 	>=dev-libs/libxml2-2.7.8:2
 	>=gnome-base/gnome-desktop-3:3=
 
@@ -37,11 +37,10 @@ COMMON_DEPEND="
 	x11-libs/libXext
 	x11-libs/libXrender
 
-	exif? ( >=media-libs/libexif-0.6.20 )
+	>=media-libs/gexiv2-0.10
 	>=dev-libs/gobject-introspection-0.6.4:=
 	selinux? ( >=sys-libs/libselinux-2 )
-	tracker? ( >=app-misc/tracker-1.99:= )
-	xmp? ( >=media-libs/exempi-2.1.0:2 )
+	>=app-misc/tracker-1.99:=
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-lang/perl-5
@@ -72,8 +71,6 @@ src_prepare() {
 			close the previewer, press space again."
 	fi
 
-	epatch ${FILESDIR}/${P}-tracker2.patch
-
 	gnome2_src_prepare
 
 }
@@ -81,15 +78,12 @@ src_prepare() {
 src_configure() {
 
 	local emesonargs=(
-		-Denable-desktop=true \
 		-Denable-profiling=false \
-		-Denable-exif=$(usex exif true false) \
 		-Denable-packagekit=$(usex packagekit true false) \
 		-Denable-nst-extension=$(usex sendto true false) \
 		-Denable-selinux=$(usex selinux true false) \
-		-Denable-tracker=$(usex tracker true false) \
-		-Denable-xml=$(usex xmp true false) \
-		-Denable-gtk-doc=$(usex doc true false)
+		-Denable-gtk-doc=$(usex doc true false) \
+		-Dextensions=true
 	)
 
 	meson_src_configure
