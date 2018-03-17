@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python2_7 python3_{3,4,5} )
+PYTHON_COMPAT=( python2_7 python3_{4,5,6} )
 
 inherit eutils gnome2 python-r1 virtualx
 
@@ -13,7 +12,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/PyGObject"
 
 LICENSE="LGPL-2.1+"
 SLOT="3"
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~x64-solaris ~x86-solaris"
 IUSE="+cairo examples test +threads"
 
 REQUIRED_USE="
@@ -26,7 +25,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	>=dev-libs/gobject-introspection-1.46.0:=
 	virtual/libffi:=
 	cairo? (
-		>=dev-python/pycairo-1.10.0[${PYTHON_USEDEP}]
+		>=dev-python/pycairo-1.11.1[${PYTHON_USEDEP}]
 		x11-libs/cairo )
 "
 DEPEND="${COMMON_DEPEND}
@@ -54,6 +53,15 @@ RDEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
+	# Test fail with xvfb but not X
+	sed -e 's/^.*TEST_NAMES=compat_test_pygtk .*;/echo "Test disabled";/' \
+		-i tests/Makefile.{am,in} || die
+
+	# FAIL: test_cairo_font_options (test_cairo.TestPango)
+	# AssertionError: <type 'cairo.SubpixelOrder'> != <type 'int'>
+	sed -e 's/^.*type(font_opts.get_subpixel_order()), int.*/#/' \
+		-i tests/test_cairo.py || die
+
 	gnome2_src_prepare
 	python_copy_sources
 }
@@ -64,8 +72,7 @@ src_configure() {
 	# docs disabled by upstream default since they are very out of date
 	configuring() {
 		gnome2_src_configure \
-			$(use_enable cairo) \
-			$(use_enable threads thread)
+			$(use_enable cairo)
 
 		# Pyflakes tests work only in python2, bug #516744
 		if use test && [[ ${EPYTHON} != python2.7 ]]; then
@@ -98,8 +105,5 @@ src_test() {
 src_install() {
 	python_foreach_impl run_in_build_dir gnome2_src_install
 
-	if use examples; then
-		insinto /usr/share/doc/${PF}
-		doins -r examples
-	fi
+	dodoc -r examples
 }
