@@ -223,6 +223,7 @@ src_configure() {
 		-DCMAKE_BUILD_TYPE=Release
 		-DPORT=GTK
 		-DUSE_WOFF2=ON
+		-DUSE_GSTREAMER_PLAYBIN3=ON
 		${ruby_interpreter}
 	)
 
