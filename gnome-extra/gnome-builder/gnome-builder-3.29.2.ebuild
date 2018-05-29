@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -17,7 +17,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
 LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="clang debug +devhelp doc flatpak +gca +gdb +git introspection python sysprof vala webkit"
+IUSE="clang debug +devhelp doc flatpak +gca +gdb +git introspection python spell sysprof vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # When bumping, pay attention to all the included plugins/*/configure.ac files and the requirements within.
@@ -32,7 +32,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 # An introspection USE flag of a dep is required if any introspection based language plugin wants to use it. Last full check at 3.22.4
 RDEPEND="
 	>=x11-libs/gtk+-3.22.26:3[introspection]
-	>=dev-libs/glib-2.55.0:2[dbus]
+	>=dev-libs/glib-2.56.0:2[dbus]
 	>=x11-libs/gtksourceview-3.24.0:3.0[introspection]
 	>=dev-libs/gobject-introspection-1.48.0:=
 	>=dev-python/pygobject-3.22.0:3
@@ -40,11 +40,9 @@ RDEPEND="
 	>=x11-libs/pango-1.38.0
 	>=dev-libs/libpeas-1.22
 	>=dev-libs/json-glib-1.2.0
-	>=app-text/gspell-1.2
-	>=app-text/enchant-1.6.0
-	>=dev-libs/libdazzle-${PV}
-	>=dev-libs/template-glib-3.27.90
-	>=dev-libs/jsonrpc-glib-3.27.91
+	>=dev-libs/libdazzle-3.29.1
+	>=dev-libs/template-glib-3.28.0
+	>=dev-libs/jsonrpc-glib-3.29.1
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -60,7 +58,9 @@ RDEPEND="
 	gca? ( dev-util/gnome-code-assistance )
 	python? (	dev-python/jedi
 			dev-python/lxml )
-	sysprof? ( >=dev-util/sysprof-3.27.91[gtk] )
+	spell? (	>=app-text/gspell-1.2
+			>=app-text/enchant-2:0/2 )
+	sysprof? ( >=dev-util/sysprof-3.28.0[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
 	vala? ( $(vala_depend)
@@ -108,6 +108,7 @@ src_configure() {
 		-Dwith_jedi=$(usex python true false)
 		-Dwith_python_gi_imports_completion=$(usex python true false)
 		-Dwith_python_pack=$(usex python true false)
+		-Dwith_spellcheck=$(usex spell true false)
 		-Dwith_sysprof=$(usex sysprof true false)
 		-Dwith_vala_pack=$(usex vala true false)
 		-Dwith_vapi=$(usex vala true false)
