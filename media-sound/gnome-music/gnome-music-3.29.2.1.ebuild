@@ -4,7 +4,7 @@
 EAPI=6
 PYTHON_COMPAT=( python{3_4,3_5,3_6} )
 
-inherit gnome2 python-single-r1
+inherit gnome2 python-single-r1 meson
 
 DESCRIPTION="Music management for Gnome"
 HOMEPAGE="https://wiki.gnome.org/Apps/Music"
@@ -20,22 +20,19 @@ COMMON_DEPEND="
 	${PYTHON_DEPS}
 	>=app-misc/tracker-1.99.1[introspection(+)]
 	>=dev-python/pygobject-3.21.1:3[cairo,${PYTHON_USEDEP}]
+	>=dev-python/pycairo-1.14.0
 	>=dev-libs/glib-2.28:2
 	>=dev-libs/gobject-introspection-1.35.9:=
 	>=media-libs/grilo-0.3.4:0.3[introspection]
 	>=media-libs/libmediaart-1.9.1:2.0[introspection]
 	>=x11-libs/gtk+-3.19.3:3[introspection]
+	>=dev-libs/libdazzle-3.28
+	net-libs/libsoup:2.4
 "
 # xdg-user-dirs-update needs to be there to create needed dirs
 # https://bugzilla.gnome.org/show_bug.cgi?id=731613
 RDEPEND="${COMMON_DEPEND}
-	|| (
-		app-misc/tracker[gstreamer]
-		app-misc/tracker[ffmpeg]
-	)
-	x11-libs/libnotify[introspection]
-	dev-python/dbus-python[${PYTHON_USEDEP}]
-	dev-python/requests[${PYTHON_USEDEP}]
+	app-misc/tracker
 	media-libs/gstreamer:1.0[introspection]
 	media-libs/gst-plugins-base:1.0[introspection]
 	media-plugins/gst-plugins-meta:1.0
@@ -57,7 +54,12 @@ src_prepare() {
 	gnome2_src_prepare
 }
 
+src_configure() {
+	meson_src_configure
+}
+
 src_install() {
-	gnome2_src_install
+	meson_src_install
 	python_fix_shebang "${D}"usr/bin/gnome-music
 }
+
