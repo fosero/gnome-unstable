@@ -33,16 +33,16 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 RDEPEND="
 	>=x11-libs/gtk+-3.22.26:3[introspection]
 	>=dev-libs/glib-2.56.0:2[dbus]
-	>=x11-libs/gtksourceview-3.24.0:3.0[introspection]
+	>=x11-libs/gtksourceview-4.0.0:4.0[introspection]
 	>=dev-libs/gobject-introspection-1.48.0:=
 	>=dev-python/pygobject-3.22.0:3
 	>=dev-libs/libxml2-2.9
 	>=x11-libs/pango-1.38.0
 	>=dev-libs/libpeas-1.22
 	>=dev-libs/json-glib-1.2.0
-	>=dev-libs/libdazzle-3.29.1
+	>=dev-libs/libdazzle-3.29.4
 	>=dev-libs/template-glib-3.28.0
-	>=dev-libs/jsonrpc-glib-3.29.1
+	>=dev-libs/jsonrpc-glib-3.29.3
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -60,7 +60,7 @@ RDEPEND="
 			dev-python/lxml )
 	spell? (	>=app-text/gspell-1.2
 			>=app-text/enchant-2:0/2 )
-	sysprof? ( >=dev-util/sysprof-3.28.0[gtk] )
+	sysprof? ( >=dev-util/sysprof-3.29.3[gtk] )
 	dev-libs/libpcre:3
 	${PYTHON_DEPS}
 	vala? ( $(vala_depend)
@@ -69,7 +69,7 @@ RDEPEND="
 # desktop-file-utils for desktop-file-validate check in configure for 3.22.4
 # mm-common due to not fully clean --disable-idemm behaviour, recheck on bump
 DEPEND="${RDEPEND}
-	>=dev-util/meson-0.44
+	>=dev-util/meson-0.46
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
