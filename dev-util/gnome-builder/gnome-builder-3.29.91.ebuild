@@ -32,7 +32,7 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 # An introspection USE flag of a dep is required if any introspection based language plugin wants to use it. Last full check at 3.22.4
 RDEPEND="
 	>=x11-libs/gtk+-3.22.26:3[introspection]
-	>=dev-libs/glib-2.56.0:2[dbus]
+	>=dev-libs/glib-2.57.2:2[dbus]
 	>=x11-libs/gtksourceview-4.0.0:4.0[introspection]
 	>=dev-libs/gobject-introspection-1.48.0:=
 	>=dev-python/pygobject-3.22.0:3
@@ -40,9 +40,9 @@ RDEPEND="
 	>=x11-libs/pango-1.38.0
 	>=dev-libs/libpeas-1.22
 	>=dev-libs/json-glib-1.2.0
-	>=dev-libs/libdazzle-3.29.4
+	>=dev-libs/libdazzle-${PV}
 	>=dev-libs/template-glib-3.28.0
-	>=dev-libs/jsonrpc-glib-3.29.3
+	>=dev-libs/jsonrpc-glib-${PV}
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -69,7 +69,7 @@ RDEPEND="
 # desktop-file-utils for desktop-file-validate check in configure for 3.22.4
 # mm-common due to not fully clean --disable-idemm behaviour, recheck on bump
 DEPEND="${RDEPEND}
-	>=dev-util/meson-0.46
+	>=dev-util/meson-0.47.1
 	dev-cpp/mm-common
 	dev-libs/appstream-glib
 	dev-util/desktop-file-utils
