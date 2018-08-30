@@ -26,7 +26,6 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 # FIXME: >=dev-util/devhelp-3.20.0 dependency is automagic for devhelp integration plugin
 # FIXME: flatpak-plugin needs flatpak.pc >=0.6.9, libgit2[threads] >=libgit2-glib-0.24.0[ssh] libsoup-2.4.pc
 # FIXME: --with-sanitizer configure option
-# FIXME: Enable rdtscp based high performance counter usage on suitable architectures for EGG_COUNTER?
 # Python is always enabled - the core python plugin support checks are automagic and not worth crippling it by not supporting python plugins
 # Relatedly introspection is always required to not have broken python using plugins or have to enable/disable them based on it. This is a full IDE, not a place to be really minimal.
 # An introspection USE flag of a dep is required if any introspection based language plugin wants to use it. Last full check at 3.22.4
@@ -42,7 +41,7 @@ RDEPEND="
 	>=dev-libs/json-glib-1.2.0
 	>=dev-libs/libdazzle-${PV}
 	>=dev-libs/template-glib-3.28.0
-	>=dev-libs/jsonrpc-glib-${PV}
+	>=dev-libs/jsonrpc-glib-3.29.91
 	devhelp? ( >=dev-util/devhelp-3.25.1 )
 	webkit? ( >=net-libs/webkit-gtk-2.12.0:4=[introspection] )
 	clang? ( sys-devel/clang )
@@ -96,7 +95,6 @@ src_configure() {
 	# consider a split package instead of USE flag. Deps are in libidemm/configure.ac
 
 	local emesonargs=(
-		-Denable_rdtscp=true
 		-Dwith_devhelp=$(usex devhelp true false)
 		-Dwith_docs=$(usex doc true false)
 		-Dwith_help=$(usex doc true false)
