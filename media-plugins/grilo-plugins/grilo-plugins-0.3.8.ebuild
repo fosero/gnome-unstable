@@ -3,9 +3,9 @@
 
 EAPI=6
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} )
+PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6,3_7} )
 
-inherit gnome2 python-any-r1
+inherit gnome2 meson python-any-r1
 
 DESCRIPTION="A framework for easy media discovery and browsing"
 HOMEPAGE="https://wiki.gnome.org/Projects/Grilo"
@@ -13,7 +13,7 @@ HOMEPAGE="https://wiki.gnome.org/Projects/Grilo"
 LICENSE="LGPL-2.1+"
 SLOT="0.3"
 KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc x86"
-IUSE="daap dvd examples chromaprint flickr freebox gnome-online-accounts lua subtitles test thetvdb tracker upnp-av vimeo +youtube"
+IUSE="daap dvd examples chromaprint flickr freebox lua subtitles test thetvdb tracker upnp-av vimeo +youtube"
 
 # Bump gom requirement to avoid segfaults
 RDEPEND="
@@ -32,7 +32,6 @@ RDEPEND="
 	dvd? ( >=dev-libs/totem-pl-parser-3.4.1 )
 	flickr? ( net-libs/liboauth )
 	freebox? ( net-dns/avahi )
-	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.17.91:= )
 	lua? (
 		>=dev-lang/lua-5.3
 		app-arch/libarchive
@@ -73,60 +72,41 @@ pkg_setup() {
 	use upnp-av && use test && python-any-r1_pkg_setup
 }
 
-src_prepare () {
-	gnome2_src_prepare
-	sed -e "s:GETTEXT_PACKAGE=grilo-plugins$:GETTEXT_PACKAGE=grilo-plugins-${SLOT}:" \
-		-i configure.ac configure || die "sed configure.ac configure failed"
-}
-
 # FIXME: some unittests required python-dbusmock
+# FIXME: incomplete options
 src_configure() {
-	# --enable-debug only changes CFLAGS, useless for us
-	# Plugins
-	# shoutcast seems to be broken
-	gnome2_src_configure \
-		--disable-static \
-		--disable-debug \
-		--disable-uninstalled \
-		--enable-bookmarks \
-		--enable-filesystem \
-		--enable-gravatar \
-		--enable-jamendo \
-		--enable-local-metadata \
-		--enable-magnatune \
-		--enable-metadata-store \
-		--enable-podcasts \
-		--enable-raitv \
-		--disable-shoutcast \
-		--enable-tmdb \
-		$(use_enable chromaprint) \
-		$(use_enable daap dmap) \
-		$(use_enable dvd optical-media) \
-		$(use_enable flickr) \
-		$(use_enable freebox) \
-		$(use_enable gnome-online-accounts goa) \
-		$(use_enable lua lua-factory) \
-		$(use_enable subtitles opensubtitles) \
-		$(use_enable thetvdb) \
-		$(use_enable tracker) \
-		$(use_enable upnp-av dleyna) \
-		$(use_enable vimeo) \
-		$(use_enable youtube)
+
+	local emesonargs=(
+		-Denable-bookmarks=yes
+		-Denable-chromaprint=$(usex chromaprint yes no)
+		-Denable-dleyna=$(usex upnp-av yes no)
+		-Denable-filesystem=yes
+		-Denable-gravatar=yes
+		-Denable-jamendo=yes
+		-Denable-local-metadata=yes
+		-Denable-lua-factory=$(usex lua yes no)
+		-Denable-metadata-store=yes
+		-Denable-tracker=$(usex tracker yes no)
+	)
+
+	meson_src_configure
+
 }
 
-src_install() {
-	if use examples; then
-		docinto examples
-		doins help/examples/*.c
-	fi
-
-	gnome2_src_install \
-		DOC_MODULE_VERSION=${SLOT%/*} \
-		HELP_ID="grilo-plugins-${SLOT%/*}" \
-		HELP_MEDIA=""
-
-	# The above doesn't work and collides with 0.2 slot
-	mv "${ED}"/usr/share/help/C/examples/example-tmdb{,-0.3}.c || die
-	mv "${ED}"/usr/share/help/C/grilo-plugins/legal{,-0.3}.xml || die
-	mv "${ED}"/usr/share/help/C/grilo-plugins/grilo-plugins{,-0.3}.xml || die
-}
+# FIXME: SLOT clash not fixed
+#src_install() {
+#	if use examples; then
+#		docinto examples
+#		doins help/examples/*.c
+#	fi
+#
+#	gnome2_src_install \
+#		DOC_MODULE_VERSION=${SLOT%/*} \
+#		HELP_ID="grilo-plugins-${SLOT%/*}" \
+#		HELP_MEDIA=""
+#
+#	# The above doesn't work and collides with 0.2 slot
+#	mv "${ED}"/usr/share/help/C/examples/example-tmdb{,-0.3}.c || die
+#	mv "${ED}"/usr/share/help/C/grilo-plugins/legal{,-0.3}.xml || die
+#	mv "${ED}"/usr/share/help/C/grilo-plugins/grilo-plugins{,-0.3}.xml || die
+#}
