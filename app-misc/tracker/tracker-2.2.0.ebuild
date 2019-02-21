@@ -22,12 +22,12 @@ IUSE="networkmanager stemmer test upower"
 KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc x86"
 
 PATCHES=(
-	${FILESDIR}/${P}-python2-shebang.diff
+	${FILESDIR}/${P}_alpha1-python2-shebang.diff
 )
 
 RDEPEND="
 	>=dev-db/sqlite-3.20:=
-	>=dev-libs/glib-2.44:2
+	>=dev-libs/glib-2.46:2
 	>=dev-libs/gobject-introspection-0.9.5:=
 	>=dev-libs/icu-4.8.1.1:=
 	>=dev-libs/json-glib-1.0
@@ -79,8 +79,8 @@ src_configure() {
 
 	local emesonargs=(
 		-Dfunctional_test=false
-		-Dnetwork_manager=yes
-		-Dstemmer=no
+		-Dnetwork_manager=enabled
+		-Dstemmer=disabled
 		-Dunicode_support=icu
 	)
 
