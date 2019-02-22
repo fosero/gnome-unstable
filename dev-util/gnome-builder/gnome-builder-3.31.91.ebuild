@@ -16,7 +16,7 @@ HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
 LICENSE="GPL-3+ GPL-2+ LGPL-3+ LGPL-2+ MIT CC-BY-SA-3.0 CC0-1.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="clang +devhelp doc +git gtk-doc sysprof test vala webkit"
+IUSE="clang +devhelp doc +flatpak +git gtk-doc python sysprof test vala webkit"
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 # When bumping, pay attention to all the included plugins/*/meson.build (and other) build files and the requirements within.
@@ -57,6 +57,11 @@ RDEPEND="
 	${PYTHON_DEPS}
 	clang? ( sys-devel/clang:= )
 	devhelp? ( >=dev-util/devhelp-3.25.1:= )
+	flatpak? ( sys-apps/flatpak )
+	python? (
+			dev-util/gnome-code-assistance
+			dev-python/jedi
+	)
 	sysprof? ( >=dev-util/sysprof-3.30.2[gtk] )
 	vala? (
 		dev-lang/vala:=
@@ -137,8 +142,10 @@ src_configure() {
 		$(meson_use clang plugin_clang)
 		$(meson_use devhelp plugin_devhelp)
 		-Dplugin_deviced=false
-		-Dplugin_flatpak=false
+		$(meson_use flatpak plugin_flatpak)
 		$(meson_use git plugin_git)
+		$(meson_use python plugin_jedi)
+		$(meson_use python plugin_python_pack)
 		$(meson_use webkit plugin_html_preview)
 		-Dplugin_spellcheck=false # TODO: requires enchant-2
 		$(meson_use sysprof plugin_sysprof)
