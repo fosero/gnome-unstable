@@ -1,13 +1,13 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-PYTHON_COMPAT=( python3_{4,5,6} )
+PYTHON_COMPAT=( python3_{6,7,8} )
 VALA_MIN_API_VERSION="0.36"
 DISABLE_AUTOFORMATTING=1
 FORCE_PRINT_ELOG=1
 
-inherit gnome.org gnome2-utils llvm meson python-single-r1 readme.gentoo-r1 vala virtualx xdg
+inherit gnome.org gnome2-utils llvm meson python-r1 readme.gentoo-r1 vala virtualx xdg
 
 DESCRIPTION="An IDE for writing GNOME-based software"
 HOMEPAGE="https://wiki.gnome.org/Apps/Builder"
@@ -36,15 +36,16 @@ LIBGIT_DEPS="
 	>=dev-libs/libgit2-glib-0.25.0[ssh]
 "
 # TODO: Handle llvm slots via llvm.eclass; see plugins/clang/meson.build
+#	>=dev-libs/libpeas-1.22.0[python,${PYTHON_USEDEP}]
 RDEPEND="
-	>=dev-libs/libdazzle-3.31.90[introspection,vala?]
-	>=dev-libs/glib-2.59.0:2
+	>=dev-libs/libdazzle-3.33.90[introspection,vala?]
+	>=dev-libs/glib-2.61.2:2
 	>=x11-libs/gtk+-3.24.0:3[introspection]
 	>=x11-libs/gtksourceview-4.0.0:4[introspection]
 	>=dev-libs/json-glib-1.2.0
 	>=dev-libs/jsonrpc-glib-3.30.1[vala?]
 	>=x11-libs/pango-1.38.0
-	>=dev-libs/libpeas-1.22.0[python,${PYTHON_USEDEP}]
+	>=dev-libs/libpeas-1.22.0[python]
 	>=dev-libs/template-glib-3.28.0[introspection,vala?]
 	>=x11-libs/vte-0.40.2:2.91[vala?]
 	>=dev-libs/libxml2-2.9.0
@@ -83,7 +84,7 @@ DEPEND="${RDEPEND}
 		sys-apps/dbus )
 	dev-util/desktop-file-utils
 	dev-util/glib-utils
-	>=dev-util/meson-0.48
+	>=dev-util/meson-0.49.2
 	>=sys-devel/gettext-0.19.8
 	virtual/pkgconfig
 "
@@ -117,24 +118,22 @@ llvm_check_deps() {
 }
 
 pkg_setup() {
-	python-single-r1_pkg_setup
 	use clang && llvm_pkg_setup
 }
 
 src_prepare() {
-	use vala && vala_src_prepare
+	vala_src_prepare
 	xdg_src_prepare
 }
 
 src_configure() {
 	local emesonargs=(
-		-Denable_tracing=false
-		-Denable_profiling=false # not passing -pg to CFLAGS
+		-Dtracing=false
+		-Dprofiling=false # not passing -pg to CFLAGS
 		-Dfusermount_wrapper=false # meant for flatpak builds
 		-Dtcmalloc=false
-		-Dwith_channel=other
-		-Dwith_editorconfig=true # needs libpcre
-		$(meson_use webkit with_webkit)
+		-Dchannel=other
+		-Dplugin_editorconfig=true # needs libpcre
 		$(meson_use doc help)
 		$(meson_use gtk-doc docs)
 
@@ -150,6 +149,7 @@ src_configure() {
 		-Dplugin_spellcheck=false # TODO: requires enchant-2
 		$(meson_use sysprof plugin_sysprof)
 		$(meson_use vala plugin_vala)
+		-Dplugin_podman=false
 	)
 	meson_src_configure
 }
