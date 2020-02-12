@@ -4,7 +4,7 @@
 EAPI=6
 PYTHON_COMPAT=( python{3_4,3_5,3_6,3_7} )
 
-inherit gnome2 python-single-r1 meson
+inherit gnome2 python-r1 meson
 
 DESCRIPTION="Music management for Gnome"
 HOMEPAGE="https://wiki.gnome.org/Apps/Music"
