@@ -150,6 +150,7 @@ src_configure() {
 		$(meson_use sysprof plugin_sysprof)
 		$(meson_use vala plugin_vala)
 		-Dplugin_podman=false
+		-Dplugin_update_manager=false
 	)
 	meson_src_configure
 }
