@@ -23,10 +23,11 @@ COMMON_DEPEND="
 	>=dev-python/pycairo-1.14.0
 	>=dev-libs/glib-2.28:2
 	>=dev-libs/gobject-introspection-1.35.9:=
-	>=media-libs/grilo-0.3.9:0.3[introspection]
-	>=media-plugins/grilo-plugins-0.3.9:0.3[lua]
+	>=media-libs/grilo-0.3.12:0.3[introspection]
+	>=media-plugins/grilo-plugins-0.3.10:0.3[lua]
 	>=media-libs/libmediaart-1.9.1:2.0[introspection]
-	>=x11-libs/gtk+-3.19.3:3[introspection]
+	>=net-libs/gnome-online-accounts-3.35.90[introspection]
+	>=x11-libs/gtk+-3.24.7:3[introspection]
 	>=dev-libs/libdazzle-3.28
 	net-libs/libsoup:2.4
 "
@@ -62,5 +63,6 @@ src_configure() {
 src_install() {
 	meson_src_install
 	python_fix_shebang "${D}"usr/bin/gnome-music
+	python_optimize
 }
 
