@@ -18,6 +18,7 @@ RDEPEND="
         >=dev-libs/libgudev-234:=
         sys-apps/systemd
 	sys-power/upower
+	>=sys-auth/polkit-0.114
 "
 DEPEND="${RDEPEND}"
 BDEPEND="
