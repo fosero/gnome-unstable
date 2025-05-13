@@ -5,7 +5,7 @@ EAPI=8
 
 DISTUTILS_EXT=1
 DISTUTILS_USE_PEP517=no
-PYTHON_COMPAT=( python3_{10..12} pypy3 )
+PYTHON_COMPAT=( python3_{11..14} pypy3 )
 
 inherit meson virtualx xdg distutils-r1 git-r3
 
@@ -17,7 +17,7 @@ LICENSE="LGPL-2.1"
 SLOT="3"
 IUSE="+cairo examples test"
 
-KEYWORDS="amd64"
+# KEYWORDS="amd64"
 RDEPEND=""
 DEPEND="${RDEPEND}"
 BDEPEND="
