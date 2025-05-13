@@ -15,7 +15,7 @@ IUSE="+introspection test +vala"
 REQUIRED_USE="vala? ( introspection )"
 EGIT_REPO_URI="https://gitlab.gnome.org/GNOME/libadwaita.git"
 
-KEYWORDS="amd64 ~arm ~arm64 ~loong ~ppc ~ppc64 ~riscv ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~loong ~ppc ~ppc64 ~riscv ~x86"
 
 RDEPEND="
 	>=dev-libs/glib-2.76:2
